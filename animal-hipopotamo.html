@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hipopótamo · Parque Dois Irmãos</title>
+<style>
+  :root{--bg:#f4f1ea;--card:#fff;--tx:#1f2a24;--mut:#5d6b63;--g:#2f6b4a;--g2:#e3efe7}
+  @media(prefers-color-scheme:dark){:root{--bg:#121a15;--card:#1b2620;--tx:#eaf1ec;--mut:#9fb0a6;--g:#6fc296;--g2:#24362c}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.6}
+  .wrap{max-width:560px;margin:0 auto;padding-bottom:32px}
+  header{padding:14px 18px;font-size:.85rem;letter-spacing:.04em;text-transform:uppercase;color:var(--g);font-weight:700}
+  .hero{position:relative;aspect-ratio:4/3;background:var(--g2);overflow:hidden}
+  .hero img{width:100%;height:100%;object-fit:cover;display:block}
+  .hero .ph{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:5rem}
+  .card{background:var(--card);margin:-24px 14px 0;position:relative;border-radius:18px;padding:20px;box-shadow:0 6px 24px rgba(0,0,0,.12)}
+  h1{margin:0;font-size:1.7rem}
+  .sci{margin:2px 0 14px;color:var(--mut);font-style:italic}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .tag{background:var(--g2);color:var(--g);border-radius:99px;padding:4px 12px;font-size:.8rem;font-weight:600}
+  .audio{background:var(--g2);border-radius:14px;padding:14px;margin:16px 0}
+  .audio b{display:block;margin-bottom:8px}
+  .btns{display:flex;gap:8px}
+  button{flex:1;border:0;border-radius:10px;padding:12px;font-size:1rem;font-weight:700;cursor:pointer;background:var(--g);color:#fff}
+  button.sec{background:transparent;color:var(--g);border:2px solid var(--g)}
+  audio{width:100%}
+  h2{font-size:1.05rem;margin:20px 0 6px;color:var(--g)}
+  p{margin:0 0 10px}
+  .facts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .fact{background:var(--g2);border-radius:12px;padding:10px 12px}
+  .fact small{display:block;color:var(--mut);font-size:.75rem}
+  .fact strong{font-size:.95rem}
+  footer{text-align:center;color:var(--mut);font-size:.8rem;margin-top:22px;padding:0 18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>🌿 Parque Dois Irmãos · Recife</header>
+
+  <div class="hero">
+    <img id="foto" alt="" onerror="this.style.display='none';document.getElementById('ph').style.display='flex'">
+    <div class="ph" id="ph">🦛</div>
+  </div>
+
+  <main class="card">
+    <h1 id="nome"></h1>
+    <div class="sci" id="cientifico"></div>
+    <div class="tags" id="tags"></div>
+
+    <div class="audio">
+      <b>🎧 Ouça a história</b>
+      <div id="audioArea"></div>
+    </div>
+
+    <h2>A história</h2>
+    <div id="historia"></div>
+
+    <h2>Ficha rápida</h2>
+    <div class="facts" id="fatos"></div>
+  </main>
+
+  <footer>Respeite os animais: não alimente, não bata no vidro e mantenha distância. Obrigado por visitar!</footer>
+</div>
+
+<script>
+/* ===== DADOS DO ANIMAL — para criar outra página, troque só este bloco ===== */
+const animal = {
+  nome: "Hipopótamo",
+  cientifico: "Hippopotamus amphibius",
+  foto: "https://cdn.folhape.com.br/upload/dn_arquivo/2022/02/hipopotamo-foto-lu-rocha.jpg",
+  audioSrc: "",   // ex.: "audio/hipopotamo.mp3" (gravação real). Se vazio, usa voz sintética do aparelho.
+  tags: ["Mamífero", "Origem: África", "Semiaquático"],
+  historia: [
+    "O hipopótamo é um dos maiores mamíferos terrestres do mundo. Apesar do corpo pesado, ele passa a maior parte do dia dentro d’água, que protege sua pele sensível do sol.",
+    "Sua pele produz uma substância avermelhada e oleosa que funciona como uma espécie de protetor solar natural. Por isso, muita gente acha que ele “sua sangue”, mas não é sangue de verdade.",
+    "Ele não nada de verdade: caminha pelo fundo dos rios e lagos, e sai para pastar à noite. Mesmo parecendo calmo, é um animal muito territorial, por isso a distância dele é importante.",
+    "Hoje a espécie é considerada vulnerável na natureza, principalmente pela perda de habitat e pela caça. Os zoológicos ajudam a contar essa história e a conscientizar o público."
+  ],
+  fatos: [
+    ["Peso", "até ~1,5 tonelada ou mais"],
+    ["Alimentação", "Herbívoro (capim)"],
+    ["Habitat", "Rios e lagos da África"],
+    ["Curiosidade", "Passa horas submerso"]
+  ]
+};
+/* ========================================================================== */
+
+document.title = animal.nome + " · Parque Dois Irmãos";
+document.getElementById("nome").textContent = animal.nome;
+document.getElementById("cientifico").textContent = animal.cientifico;
+const foto = document.getElementById("foto");
+foto.src = animal.foto; foto.alt = animal.nome;
+document.getElementById("tags").innerHTML = animal.tags.map(t => `<span class="tag">${t}</span>`).join("");
+document.getElementById("historia").innerHTML = animal.historia.map(p => `<p>${p}</p>`).join("");
+document.getElementById("fatos").innerHTML = animal.fatos.map(f => `<div class="fact"><small>${f[0]}</small><strong>${f[1]}</strong></div>`).join("");
+
+const area = document.getElementById("audioArea");
+if (animal.audioSrc) {
+  area.innerHTML = `<audio controls preload="none" src="${animal.audioSrc}"></audio>`;
+} else if ("speechSynthesis" in window) {
+  area.innerHTML = `<div class="btns"><button id="play">▶ Ouvir</button><button id="stop" class="sec">■ Parar</button></div>`;
+  const texto = animal.nome + ". " + animal.historia.join(" ");
+  document.getElementById("play").onclick = () => {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(texto);
+    u.lang = "pt-BR"; u.rate = 0.95;
+    speechSynthesis.speak(u);
+  };
+  document.getElementById("stop").onclick = () => speechSynthesis.cancel();
+} else {
+  area.textContent = "Áudio indisponível neste aparelho.";
+}
+</script>
+</body>
+</html>
